@@ -1,4 +1,4 @@
-% Created 2025-12-17 Wed 16:58
+% Created 2025-12-30 Tue 17:28
 % Intended LaTeX compiler: lualatex
 \documentclass[a4paper]{article}
 \usepackage{amsmath}
@@ -12,9 +12,9 @@
 \usepackage{hyperref}
 \usepackage{fontspec}
 \setmainfont{Times New Roman}
-\usepackage{amsmath}
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
+\usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
@@ -39,23 +39,23 @@
 \maketitle
 \tableofcontents
 \flushleft
-\section{Question 1}
-\label{sec:org166548c}
+\section{Question}
+\label{sec:org74b39bd}
 
-We are given a set of hard drive lifetimes to analyse. If we want to predict their lifetimes, the easiest method is to fit a common survival model like the exponential distribution. If we give R the data, we can very quickly visualise it using a histogram and box-plot. See Appendix \ref{sec:orgda02e74} for the commands. We can visually see that the battery lifetimes follow a logarithmic-like distribution (Figure 1), and could easily be fitted by a standard survival analysis curve like the exponential distribution. We can also see a high length of outliers however, and this could pull the curve away from the bulkier half of the curve that die within 5 years. Observing the box-plot closer, we can see the median is quite low within the interquartile range, implying further that summary statistics are being dragged up by values above the mean ranging far higher above the mean than the values below the median range below it. 
+We are given a set of hard drive lifetimes to analyse. If we want to predict their lifetimes, the easiest method is to fit a common survival model like the exponential distribution. If we give R the data, we can very quickly visualise it using a histogram and box-plot. See Appendix \ref{sec:orga3c4d6e} for the commands. We can visually see that the battery lifetimes follow a logarithmic-like distribution (Figure 1), and could easily be fitted by a standard survival analysis curve like the exponential distribution. We can also see a high length of outliers however, and this could pull the curve away from the bulkier half of the curve that die within 5 years. Observing the box-plot closer, we can see the median is quite low within the interquartile range, implying further that summary statistics are being dragged up by values above the mean ranging far higher above the mean than the values below the median range below it. 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{babelBatteryDist.pdf}
-\caption{\label{fig:org587cb0c}Histogram of battery lifetimes}
+\caption{\label{fig:orge43cf15}Histogram of battery lifetimes}
 \end{figure}
 
 \hfill \newline
 
-If we want to fit a continuous distribution to data, we can call the R "fitdistr" function (Appendix \ref{sec:org4f3d519}). As we can see from Figure 2, both models fit roughly the same. While the gamma distribution appears to fit the lower values more closely, the exponential distribution follows the overall lifetimes more closely. We can formally test whether datasets follow known continuous distributions using the Kolmogorov-Smirnov test, but the test is inconclusive in this case (Appendix \ref{sec:org4f3d519}). Therefore, we consider the AIC and BIC values of the models to choose between them.
+If we want to fit a continuous distribution to data, we can call the R "fitdistr" function (Appendix \ref{sec:orgbaba261}). As we can see from Figure 2, both models fit roughly the same. While the gamma distribution appears to fit the lower values more closely, the exponential distribution follows the overall lifetimes more closely. We can formally test whether datasets follow known continuous distributions using the Kolmogorov-Smirnov test, but the test is inconclusive in this case (Appendix \ref{sec:orgbaba261}). Therefore, we consider the AIC and BIC values of the models to choose between them.
 
 \begin{table}[htbp]
-\caption{\label{tab:orgc0fe61d}Information Criteria for models}
+\caption{\label{tab:org91b9771}Information Criteria for models}
 \centering
 \begin{tabular}{lrr}
 Criterion & Exponential.Model & Gamma.Model\\
@@ -65,48 +65,48 @@ BIC & 904.66257886915 & 909.169782124506\\
 \end{tabular}
 \end{table}
 
-Looking at Table 1, both information criteria have lower values for the exponential model. The exponential model also has a higher log-likelihood than the gamma (Appendix \ref{sec:org4f3d519}). Therefore, the exponential model is likely a better fit. We can compare simulated versions of the plots to the original. Observing Figure 2, we can see that both have similarly distributed lifetimes. In Figure 3 however, we see the summary statistics like the median and interquartile range could be more accurate in the exponential simulation. Overall, it seems fair to argue that the exponential is the better pick in this situation, since it has lower information criteria, higher log-likelihood, and slightly closer looking distributions to the data-generating process.
+Looking at Table 1, both information criteria have lower values for the exponential model. The exponential model also has a higher log-likelihood than the gamma (Appendix \ref{sec:orgbaba261}). Therefore, the exponential model is likely a better fit. We can compare simulated versions of the plots to the original. Observing Figure 2, we can see that both have similarly distributed lifetimes. In Figure 3 however, we see the summary statistics like the median and interquartile range could be more accurate in the exponential simulation. Overall, it seems fair to argue that the exponential is the better pick in this situation, since it has lower information criteria, higher log-likelihood, and slightly closer looking distributions to the data-generating process.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\linewidth,height=0.35\textheight]{babelHardDriveLifeFit.pdf}
-\caption{\label{fig:org2ce08cb}Fitted models to data distribution}
+\caption{\label{fig:orgbee4c64}Fitted models to data distribution}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.7\linewidth,height=0.35\textheight]{babelQ1Simulations.pdf}
-\caption{\label{fig:orga0b9368}Simulations of fitted models}
+\caption{\label{fig:org42f7eca}Simulations of fitted models}
 \end{figure}
 
 
 \newpage
 \section{Question 2}
-\label{sec:org8037995}
-We are given a set of European stock closing prices, and are asked to predict future trends. In order to fit time series models to the data, a common assumption is stationarity, or weakly a non-unit mean. Observing a plot of the dataset (Figure 4, made in Appendix \ref{sec:orgd3461aa}), we can see that the data visually is not stationary.. Firstly, we consider the specific series for the DAX closing prices. Observing Figure 5, we see that the ACFs for the DAX do not decrease in a geometric fashion, suggesting the series is not stationary. We can formally confirm this using an augmented Dickey-Fuller test, we have to take the first difference of the series in order to have stationarity (Appendix \ref{sec:org5ba0415}). With stationary data, we can use the R forecast package to fit a time series model. We can fit an MA(p), AR(q), and ARMA(p, q) model to the dataset, but after fitting the optimal options of each, the ARIMA(0, 1, 1) model had the best AIC (Appendix \ref{sec:org5ba0415}). 
+\label{sec:org803054b}
+We are given a set of European stock closing prices, and are asked to predict future trends. In order to fit time series models to the data, a common assumption is stationarity, or weakly a non-unit mean. Observing a plot of the dataset (Figure 4, made in Appendix \ref{sec:org46626dd}), we can see that the data visually is not stationary.. Firstly, we consider the specific series for the DAX closing prices. Observing Figure 5, we see that the ACFs for the DAX do not decrease in a geometric fashion, suggesting the series is not stationary. We can formally confirm this using an augmented Dickey-Fuller test, we have to take the first difference of the series in order to have stationarity (Appendix \ref{sec:orgae590e6}). With stationary data, we can use the R forecast package to fit a time series model. We can fit an MA(p), AR(q), and ARMA(p, q) model to the dataset, but after fitting the optimal options of each, the ARIMA(0, 1, 1) model had the best AIC (Appendix \ref{sec:orgae590e6}). 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelStockClosePlt.pdf}
-\caption{\label{fig:orgad66fb7}European Index Closing Prices}
+\caption{\label{fig:org2598c7f}European Index Closing Prices}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelACFPACFDAX.pdf}
-\caption{\label{fig:org29c2c25}ACFs and partial ACFs for DAX closing price data}
+\caption{\label{fig:orgc881e21}ACFs and partial ACFs for DAX closing price data}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelProjDAX20.pdf}
-\caption{\label{fig:org1b04a87}Predictions for DAX index from ARIMA model}
+\caption{\label{fig:org1fb3a1a}Predictions for DAX index from ARIMA model}
 \end{figure}
 
-We can use this ARIMA model to predict future closing prices for the DAX, and plot them using R. Observing Figure 6, we can see that the model predicts general price stability in the future, with no visible upward or downward trends to follow. We can go beyond ARMA, and include the information from our entire dataset. For the VAR model, we first have to demonstrate stationarity and co-integration between the variables at the same integration order. This is done in Appendix \ref{sec:org5ba0415}, since all the variables are stationary at first difference and co-integrated at second, we fit a VAR model with two lags. Since errors between variables can explain trends within the variables, the VAR model can provide impulse response functions for variable shifts. In Figure 7, we can see the VAR model predictions for the change in prices, which suggest a small decrease in the change in DAX closing prices before stabilisation over the next 10 days. 
+We can use this ARIMA model to predict future closing prices for the DAX, and plot them using R. Observing Figure 6, we can see that the model predicts general price stability in the future, with no visible upward or downward trends to follow. We can go beyond ARMA, and include the information from our entire dataset. For the VAR model, we first have to demonstrate stationarity and co-integration between the variables at the same integration order. This is done in Appendix \ref{sec:orgae590e6}, since all the variables are stationary at first difference and co-integrated at second, we fit a VAR model with two lags. Since errors between variables can explain trends within the variables, the VAR model can provide impulse response functions for variable shifts. In Figure 7, we can see the VAR model predictions for the change in prices, which suggest a small decrease in the change in DAX closing prices before stabilisation over the next 10 days. 
 
 \begin{table}[htbp]
-\caption{\label{tab:orge696107}Engle-Granger test matrix (H1: cointegrated)}
+\caption{\label{tab:orgd18d48c}Engle-Granger test matrix (H1: cointegrated)}
 \centering
 \begin{tabular}{lrrrr}
 Indices & AEX & BEL20 & CAC40 & DAX\\
@@ -121,41 +121,41 @@ DAX & 0.01 & 0.01 & 0.01 & \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{babelEuroVAR.pdf}
-\caption{\label{fig:org4a92f9e}VAR Forecasting of dataset}
+\caption{\label{fig:orgec9605c}VAR Forecasting of dataset}
 \end{figure}
 
 
 
-After completing both models, an analysis of the residuals from the ARMA regression reveals that the residuals were not normal at all (Appendix \ref{sec:org5ba0415}). This is likely reflective of non-constant variance, which ARIMA is not robust against. On the other hand, the VAR post-regression statistics showed no sign of serial correlation and had normal residuals (Appendix \ref{sec:org29c18f8}), implying that the data satisfies all of the bias and efficiency assumptions typically placed on VAR modelling. Co-integration can be an incredibly powerful tool, and, in this case, offered a more robust model when all data was considered than just the one where only the DAX itself was considered.
+After completing both models, an analysis of the residuals from the ARMA regression reveals that the residuals were not normal at all (Appendix \ref{sec:orgae590e6}). This is likely reflective of non-constant variance, which ARIMA is not robust against. On the other hand, the VAR post-regression statistics showed no sign of serial correlation and had normal residuals (Appendix \ref{sec:org1cd9598}), implying that the data satisfies all of the bias and efficiency assumptions typically placed on VAR modelling. Co-integration can be an incredibly powerful tool, and, in this case, offered a more robust model when all data was considered than just the one where only the DAX itself was considered.
 \section{Question 3}
-\label{sec:org0189ca3}
+\label{sec:org9a1331f}
 
-For this question, we are given a univariate time series of deaths in the United Kingdom due to COVID-19. We can make two models to predict this, one fitting an ARIMA to the raw data, and the other fitting an ARIMA model to the square rooted data. We can see from a visualisation that COVID deaths over time have two extreme spikes, constantly declining ACFs, and PACFs that do not completely drop after 2 lags (Appendix \ref{sec:org394a7ca}). We can also test this formally with an augmented Dickey-Fuller test. Consequently, we have to take the first difference, which we can show are stationary (Appendix \ref{sec:org7e9d951}). 
+For this question, we are given a univariate time series of deaths in the United Kingdom due to COVID-19. We can make two models to predict this, one fitting an ARIMA to the raw data, and the other fitting an ARIMA model to the square rooted data. We can see from a visualisation that COVID deaths over time have two extreme spikes, constantly declining ACFs, and PACFs that do not completely drop after 2 lags (Appendix \ref{sec:org8782d5f}). We can also test this formally with an augmented Dickey-Fuller test. Consequently, we have to take the first difference, which we can show are stationary (Appendix \ref{sec:orgae228c6}). 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelDDeathsPlt.pdf}
-\caption{\label{fig:orgf705b6d}Change in deaths, ACF and PACFs for change in deaths}
+\caption{\label{fig:org2824738}Change in deaths, ACF and PACFs for change in deaths}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelDeathsProjections.pdf}
-\caption{\label{fig:org8e26c60}Base ARIMA Model death projections}
+\caption{\label{fig:org59c9616}Base ARIMA Model death projections}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelSQDeathsProjections.pdf}
-\caption{\label{fig:org295f2b6}Back-fitted ARIMA model death projections}
+\caption{\label{fig:org7e2acb9}Back-fitted ARIMA model death projections}
 \end{figure}
 
 \hfill \newline
 
-We can now fit our ARIMA models to the raw and square rooted data (Appendix \ref{sec:org394a7ca}). Observing Figure 9, we can see that the raw data projections are far more conservative, and predict a shallower rise in deaths over time. On the other hand, the back-fitted projections suggest a far higher rise in deaths over the next two weeks (Figure 10). Hypothesis testing on residuals revealed no statistically significant issue with either model (Appendix \ref{sec:org7e9d951}). Their residuals both followed a normal distribution based on the Shapiro-Wilk test, and neither showed evidence of serial-correlation under the Ljung-Box test. Observing Figures 11 and 12, we see that neither model has abnormal ACFs or PACFs (both rapidly decay below suggested p-values), and they do not exceed the white noise test statistic. The only potentially indicative statistic is that the back-fitted ARIMA model's residual quantiles visually fit better on a straight line than the base model. Unfortunately, the two models occupy different state spaces, and consequently information criteria are not available. Based on residual quantiles and the fact that it visually seems to fit the pre-existing trend better, the back-fitted model is likely the better model in this situation. Both predict an increase in deaths over the next 2 weeks, but the back-fitted one suggests 85 more deaths within the first week than the raw model, and 233 more deaths within the second over the raw model. The back-fitted model also follows an ARMA(2, 2) process, implying that an equal mix of previous values of the series and previous error terms of the series impact the current value, whereas the raw dataset model essentially follows an AR(3) process, suggesting previous error values are unimportant and lags predict current values far more. Preferring the back-fitted model over the raw one suggests that previous shocks and previous values matter. In the raw data model (Appendix \ref{sec:org7e9d951}), the first auto-regression has a large positive coefficient, the second has a small negative auto-regression, and the third has a medium negative auto-regression, suggesting that the death auto-regressions start off in the same direction as the current value, but linearly move in an opposite direction up to the third past week.
+We can now fit our ARIMA models to the raw and square rooted data (Appendix \ref{sec:org8782d5f}). Observing Figure 9, we can see that the raw data projections are far more conservative, and predict a shallower rise in deaths over time. On the other hand, the back-fitted projections suggest a far higher rise in deaths over the next two weeks (Figure 10). Hypothesis testing on residuals revealed no statistically significant issue with either model (Appendix \ref{sec:orgae228c6}). Their residuals both followed a normal distribution based on the Shapiro-Wilk test, and neither showed evidence of serial-correlation under the Ljung-Box test. Observing Figures 11 and 12, we see that neither model has abnormal ACFs or PACFs (both rapidly decay below suggested p-values), and they do not exceed the white noise test statistic. The only potentially indicative statistic is that the back-fitted ARIMA model's residual quantiles visually fit better on a straight line than the base model. Unfortunately, the two models occupy different state spaces, and consequently information criteria are not available. Based on residual quantiles and the fact that it visually seems to fit the pre-existing trend better, the back-fitted model is likely the better model in this situation. Both predict an increase in deaths over the next 2 weeks, but the back-fitted one suggests 85 more deaths within the first week than the raw model, and 233 more deaths within the second over the raw model. The back-fitted model also follows an ARMA(2, 2) process, implying that an equal mix of previous values of the series and previous error terms of the series impact the current value, whereas the raw dataset model essentially follows an AR(3) process, suggesting previous error values are unimportant and lags predict current values far more. Preferring the back-fitted model over the raw one suggests that previous shocks and previous values matter. In the raw data model (Appendix \ref{sec:orgae228c6}), the first auto-regression has a large positive coefficient, the second has a small negative auto-regression, and the third has a medium negative auto-regression, suggesting that the death auto-regressions start off in the same direction as the current value, but linearly move in an opposite direction up to the third past week.
 
 \phantomsection
-\label{org912ed7e}
+\label{orgb2e393f}
 \begin{verbatim}
 Series: deaths$wk.deaths 
 ARIMA(3,1,0) 
@@ -184,32 +184,32 @@ For the back-fitted model, the first auto-regression has a very large positive v
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelTSDiagDeath.pdf}
-\caption{\label{fig:org93c9c75}Visual residuals testing for the base ARIMA model}
+\caption{\label{fig:orga309827}Visual residuals testing for the base ARIMA model}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelTSDiagSQDeath.pdf}
-\caption{\label{fig:org92bee30}Visual residuals testing for the back-fitted ARIMA model}
+\caption{\label{fig:org61a99b8}Visual residuals testing for the back-fitted ARIMA model}
 \end{figure}
 \section{Question 4}
-\label{sec:org6c26c9d}
-We are given a univariate time series of exchange rates between the US Dollar and British Pound over 12 years. We want to understand changes in volatility before and after the credit crisis. If we want to stochastically model volatility, we can use the GARCH model. This model expects returns, so we can take the logged returns (Appendix \ref{sec:org1e2be60}). Looking at Figure 13, the data visually looks stationary. We confirm this using a augmented Dickey-Fuller test in Appendix \ref{sec:org8f81dd5}. 
+\label{sec:org5b553c8}
+We are given a univariate time series of exchange rates between the US Dollar and British Pound over 12 years. We want to understand changes in volatility before and after the credit crisis. If we want to stochastically model volatility, we can use the GARCH model. This model expects returns, so we can take the logged returns (Appendix \ref{sec:org2019b16}). Looking at Figure 13, the data visually looks stationary. We confirm this using a augmented Dickey-Fuller test in Appendix \ref{sec:org3bef462}. 
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelEXRetTSPLT.pdf}
-\caption{\label{fig:orgaa19f7c}Logged returns for USD/GBP exchange rate}
+\caption{\label{fig:org3edae5b}Logged returns for USD/GBP exchange rate}
 \end{figure}
 
 \phantomsection
-\label{orgb4dd929}
+\label{org0f9190a}
 \begin{verbatim}
 [1] "The pre-crash data ranges from 2000-05-02 to 2007-07-31, and"
 [1] "the post-crash data ranges from 2007-08-01 to 2012-04-30."
 \end{verbatim}
 
-For simplicity, we split the data assuming the crisis happened overnight at the start of August 2007. Firstly, direct residual testing finds no problems with the distribution of the residuals for a basic ARMA(0, 1) model on both datasets (Appendix \ref{sec:org8f81dd5}), but the residuals stop following a white noise process in the post-crash dataset (Appendix \ref{sec:org1e2be60}). This could be due to stochastically changing variance, as ARIMA models are not designed around conditional variance. However, this does suggest that the mean can effectively be modelled by an ARMA distribution. We can now fit the GARCH models to the pre-crisis and post-crisis datasets in order to quantify changes to volatility in the time period. Looking at the models (Appendix \ref{sec:org8f81dd5}), we can see that they satisfy key model assumptions. GARCH models generally assume that:
+For simplicity, we split the data assuming the crisis happened overnight at the start of August 2007. Firstly, direct residual testing finds no problems with the distribution of the residuals for a basic ARMA(0, 1) model on both datasets (Appendix \ref{sec:org3bef462}), but the residuals stop following a white noise process in the post-crash dataset (Appendix \ref{sec:org2019b16}). This could be due to stochastically changing variance, as ARIMA models are not designed around conditional variance. However, this does suggest that the mean can effectively be modelled by an ARMA distribution. We can now fit the GARCH models to the pre-crisis and post-crisis datasets in order to quantify changes to volatility in the time period. Looking at the models (Appendix \ref{sec:org3bef462}), we can see that they satisfy key model assumptions. GARCH models generally assume that:
 \begin{enumerate}
 \item The average value is already modelled / a white noise process
 \item Stationarity, finite variance
@@ -220,18 +220,18 @@ We have already shown that ARMA processes can model the mean of the data effecti
 
 \hfill \newline
 
-The pre-crisis GARCH model has an \(\alpha\) of \(4.64 \times 10^{-2}\), and a \(\beta\) of \(9.50 \times 10^{-1}\), while the post-crisis GARCH model has an \(\alpha\) of \(4.422 \times 10^{-2}\) and a \(\beta\) of \(9.429 \times 10^{-1}\) (Appendix \ref{sec:org8f81dd5}). The decrease in \(\alpha\) implies that the speed at which volatility adjusts decreased in the exchange rate market, and the increase in \(\beta\) implies that the persistence of volatility increased. This could be related to higher risk-aversion in the market, where increases in volatility cause people to remain sceptical of the market for longer. Alternatively, there may have been structural alterations in the markets in response to the crisis that altered suggested or feasible trading approaches for the Forex markets. Overall, we find the GARCH model assumptions were well met, the speed at which volatility adjusts to new data decreased after the crisis, and the persistence of volatility after the crisis increased. 
+The pre-crisis GARCH model has an \(\alpha\) of \(4.64 \times 10^{-2}\), and a \(\beta\) of \(9.50 \times 10^{-1}\), while the post-crisis GARCH model has an \(\alpha\) of \(4.422 \times 10^{-2}\) and a \(\beta\) of \(9.429 \times 10^{-1}\) (Appendix \ref{sec:org3bef462}). The decrease in \(\alpha\) implies that the speed at which volatility adjusts decreased in the exchange rate market, and the increase in \(\beta\) implies that the persistence of volatility increased. This could be related to higher risk-aversion in the market, where increases in volatility cause people to remain sceptical of the market for longer. Alternatively, there may have been structural alterations in the markets in response to the crisis that altered suggested or feasible trading approaches for the Forex markets. Overall, we find the GARCH model assumptions were well met, the speed at which volatility adjusts to new data decreased after the crisis, and the persistence of volatility after the crisis increased. 
 
 
 \newpage
 
 \appendix
 \section{Appendix}
-\label{sec:org97739f7}
+\label{sec:org848d60a}
 This document was compiled by lualatex (LuaHBTeX, Version 1.21.0) in Emacs (30.2) using org-babel (9.7.37). All source code blocks were evaluated in place, and are entirely functional without any additional code beyond specified libraries. The accompanying .rmd file uses the same code, but in the correct order. This appendix is laid out for block readability, while the .rmd has the overall logic and hopefully reproducible method.
 \section{Question 1 Visualisations}
-\label{sec:orgda02e74}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orgb05c7bc,caption={Question 1: Visualisation of hard drive lifetimes},captionpos=b]
+\label{sec:orga3c4d6e}
+\begin{lstlisting}[language=r,label=lst:org95e570b,caption={Question 1: Visualisation of hard drive lifetimes},captionpos=b,numbers=none]
 suppressMessages(library(tidyverse))
 suppressMessages(library(here))
 suppressMessages(library(patchwork))
@@ -252,7 +252,7 @@ plt2 <- plt2 + labs(title = "Boxplot of battery lives", x = "Years")
 (plt / plt2) 
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org643a781,caption={Question 1: fitted model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org9108221,caption={Question 1: fitted model},captionpos=b,numbers=none]
 hist(x=hard_drives$V1, freq = FALSE, breaks = 10,
      main = "Histogram of hard drive lifetimes with fitted distributions",
      xlab = "Hard Drive Lifetimes (years)")
@@ -265,7 +265,7 @@ curve(dgamma(x, rate = gam_mod$estimate["rate"],
       add = TRUE, col = "blue", lwd= 2)
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org8530048,caption={Question 1: Simulated models},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org0f623aa,caption={Question 1: Simulated models},captionpos=b,numbers=none]
 set.seed(1234)
 exp_sim <- rexp(n = 10000, rate = exp_rate)
 gam_sim <- rgamma(n = 10000, shape = gam_shape, rate = gam_rate)
@@ -298,8 +298,8 @@ plt6 <- plt6 + labs(title = "Exponential simulated summary", x = "Years")
 (plt | plt2) / (plt3 | plt4) / (plt5 | plt6)
 \end{lstlisting}
 \section{Question 1 Fitting}
-\label{sec:org4f3d519}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org8499e3e,caption={Question 1: fitting gamma and exponential distributions},captionpos=b]
+\label{sec:orgbaba261}
+\begin{lstlisting}[language=r,label=lst:orge9711ed,caption={Question 1: fitting gamma and exponential distributions},captionpos=b,numbers=none]
 suppressMessages(require(MASS))
 
 exp_mod <- fitdistr(hard_drives$V1, "exponential")
@@ -326,9 +326,9 @@ sprintf("distribution is %f.", gam_mod$loglik)
 \end{lstlisting}
 
 \phantomsection
-\label{orgbab0672}
+\label{org56740ed}
 \begin{verbatim}
-. + > [1] "MASS stores key model fit information that we can access"
+[1] "MASS stores key model fit information that we can access"
 [1] "and read."
 [1] "The exponential distribution rate is 0.287, and the gamma"
 [1] "distribution follows shape 0.926 and rate 0.266"
@@ -337,13 +337,13 @@ sprintf("distribution is %f.", gam_mod$loglik)
 [1] "distribution is -449.286574."
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org3824633,caption={Question 1: Kolmogorov-Smirnov tests},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org5cd8758,caption={Question 1: Kolmogorov-Smirnov tests},captionpos=b,numbers=none]
 ks.test(hard_drives, "pexp", exp_rate)
 ks.test(hard_drives, "pgamma", shape = gam_shape, rate = gam_rate)
 \end{lstlisting}
 
 \phantomsection
-\label{orgdceae9e}
+\label{org1bf31d6}
 \begin{verbatim}
 
 	Asymptotic one-sample Kolmogorov-Smirnov test
@@ -360,7 +360,7 @@ D = 0.041533, p-value = 0.8805
 alternative hypothesis: two-sided
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org79a1fd8,caption={AIC and BIC information for models},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org74350aa,caption={AIC and BIC information for models},captionpos=b,numbers=none]
 n <- dim(hard_drives) 
 AIC_exp <- 2 * 1 - 2 * exp_mod$loglik
 AIC_gam <- 2 * 2 - 2 * gam_mod$loglik
@@ -377,8 +377,8 @@ fit_stats <- data.frame (
 head(fit_stats)
 \end{lstlisting}
 \section{Question 2 Visualisations}
-\label{sec:orgd3461aa}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orgdc0ffca,caption={Time series plotting of European Indices data},captionpos=b]
+\label{sec:org46626dd}
+\begin{lstlisting}[language=r,label=lst:org64127f7,caption={Time series plotting of European Indices data},captionpos=b,numbers=none]
 dclose <- tibble(read.csv(here("data", "EuroIndices_Close.csv")))
 
 ## lubridate supplies dmy parsing
@@ -395,7 +395,7 @@ plt <- plt + geom_line(aes(y = AEX_Close, colour = "AEX")) +
 plt
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org04cd0b5,caption={Visualisation of ACFs and PACFs for DAX closing price},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org18ff1d1,caption={Visualisation of ACFs and PACFs for DAX closing price},captionpos=b,numbers=none]
 par(mfrow = c(2,1))
 
 acf(dclose$DAX_Close, main = "ACFs for DAX Close")
@@ -404,14 +404,14 @@ pacf(dclose$DAX_Close, main = "Partial ACFs for DAX Close")
 par(mfrow = c(1,1))
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org06722af,caption={Predictions for DAX index from ARIMA model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org605286c,caption={Predictions for DAX index from ARIMA model},captionpos=b,numbers=none]
 Q2_arima_proj <- forecast(mod_arima_DAX, h = 10)
 
 autoplot(Q2_arima_proj, ylab = "DAX20 Closing Price")
 \end{lstlisting}
 \section{Question 2 Fitting}
-\label{sec:org5ba0415}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,caption={Stationarity testing DAX prices and first difference},captionpos=b]
+\label{sec:orgae590e6}
+\begin{lstlisting}[language=r,caption={Stationarity testing DAX prices and first difference},captionpos=b,numbers=none]
 suppressMessages(library(aTSA))
 ## augmented dickey-fuller can test stationarity in the presence
 ## of serial-correlation
@@ -426,7 +426,7 @@ adf.test(x = d1dclose$DAX_Close, nlag = 2)
 \end{lstlisting}
 
 \phantomsection
-\label{orgfd6cd0d}
+\label{org7155390}
 \begin{verbatim}
 [1] "Dickey-Fuller test on raw dataset"
 Augmented Dickey-Fuller Test 
@@ -466,7 +466,7 @@ Type 3: with drift and trend
 Note: in fact, p.value = 0.01 means p.value <= 0.01
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org1a40434,caption={ARIMA fit on differenced DAX data},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org8b74f89,caption={ARIMA fit on differenced DAX data},captionpos=b,numbers=none]
 suppressMessages(library(forecast))
 
 print("First we consider an AR(p) model.")
@@ -489,7 +489,7 @@ sprintf("of %.2f, and the ARIMA model has an AIC of %.2f.",
 \end{lstlisting}
 
 \phantomsection
-\label{orgacb5ead}
+\label{orgea10c21}
 \begin{verbatim}
 [1] "First we consider an AR(p) model."
 [1] "Second, we consider an MA(q) model."
@@ -498,14 +498,14 @@ sprintf("of %.2f, and the ARIMA model has an AIC of %.2f.",
 [1] "of 2221.60, and the ARIMA model has an AIC of 1869.57."
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org3d13194,caption={Question 2: Post-regression statistics for ARIMA model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:orgfb9f50d,caption={Question 2: Post-regression statistics for ARIMA model},captionpos=b,numbers=none]
 Q2_arima_mod <- arima(dclose$DAX_Close, c(0,1,1))
 Box.test(Q2_arima_mod$residuals, lag = 2, type = c("Ljung-Box"))
 shapiro.test(Q2_arima_mod$residuals)
 \end{lstlisting}
 
 \phantomsection
-\label{org467a5d1}
+\label{orged2f2d6}
 \begin{verbatim}
 
 	Box-Ljung test
@@ -520,8 +520,8 @@ data:  Q2_arima_mod$residuals
 W = 0.99529, p-value = 0.9134
 \end{verbatim}
 \section{Question 2 VAR model}
-\label{sec:org29c18f8}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orga2b226c,caption={Stationarity and Cointegration tests},captionpos=b]
+\label{sec:org1cd9598}
+\begin{lstlisting}[language=r,label=lst:org5184d3f,caption={Stationarity and Cointegration tests},captionpos=b,numbers=none]
 adf_checks <- (lapply(d1dclose[,-1], function(x)
     adf.test(x, nlag = 2)$p.value)) # all stationary at 99% CI
 
@@ -541,7 +541,7 @@ cointegration <- data.frame(Indices = c("AEX", "BEL20", "CAC40", "DAX"),
 cointegration
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orga1cfcbc,caption={Question 2 VAR model initialisation},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:orgde77e44,caption={Question 2 VAR model initialisation},captionpos=b,numbers=none]
 suppressMessages(library(vars))
 
 mod_var <- VARselect(d1dclose[,-1], lag.max = 5, type = c("const"))
@@ -549,7 +549,7 @@ mod_var
 \end{lstlisting}
 
 \phantomsection
-\label{org48f328f}
+\label{orgb771e0b}
 \begin{verbatim}
 $selection
 AIC(n)  HQ(n)  SC(n) FPE(n) 
@@ -563,7 +563,7 @@ SC(n)  2.178832e+01 2.205355e+01 2.250468e+01 2.291584e+01 2.334898e+01
 FPE(n) 1.920711e+09 1.801253e+09 2.035923e+09 2.213536e+09 2.463781e+09
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org3e3bfc6,caption={Question 2: VAR Forecasting},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org0370fd4,caption={Question 2: VAR Forecasting},captionpos=b,numbers=none]
 VAR_temp_mod <- VAR(d1dclose[,-1], p = 2)
 var_proj <- predict(VAR_temp_mod, h = 10)
 par(mar = c(4, 4, 2, 1))
@@ -571,7 +571,7 @@ plot(var_proj)
 par(mfrow = c(1,1))
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orgd07bbf5,caption={Question 2: VAR post-regression statistics},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org836a4a6,caption={Question 2: VAR post-regression statistics},captionpos=b,numbers=none]
 ## serial correlation
 serial.test(VAR_temp_mod)
 
@@ -580,7 +580,7 @@ normality.test(VAR_temp_mod)
 \end{lstlisting}
 
 \phantomsection
-\label{orgefb8618}
+\label{org657b557}
 \begin{verbatim}
 
 	Portmanteau Test (asymptotic)
@@ -612,8 +612,8 @@ data:  Residuals of VAR object VAR_temp_mod
 Chi-squared = 22.353, df = 4, p-value = 0.0001705
 \end{verbatim}
 \section{Question 3 Visualisations}
-\label{sec:org394a7ca}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org95b8dd3,caption={Question 3: Visualisation of deaths and ACFs},captionpos=b]
+\label{sec:org8782d5f}
+\begin{lstlisting}[language=r,label=lst:org4f98168,caption={Question 3: Visualisation of deaths and ACFs},captionpos=b,numbers=none]
 deaths <- tibble(read.csv(here("data", "deaths.csv")))
 
 deaths$date <- strptime(deaths$date, "%Y-%m-%d")
@@ -631,10 +631,10 @@ par(mfrow = c(1,1))
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\linewidth,height=0.4\textheight]{babelDeathPlot.pdf}
-\caption{\label{fig:orga8ec7fb}Question 3: Visualisation of deaths and ACFs}
+\caption{\label{fig:org1eb72b2}Question 3: Visualisation of deaths and ACFs}
 \end{figure}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orgbd44029,caption={Question 3: Visualisation of change in deaths and ACFs},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org5d207a2,caption={Question 3: Visualisation of change in deaths and ACFs},captionpos=b,numbers=none]
 par(mfrow = c(3,1))
 
 ts.plot(d.deaths$wk.deaths, main = "Change in deaths over time",
@@ -647,10 +647,10 @@ par(mfrow = c(1,1))
 
 \begin{center}
 \includegraphics[width=.9\linewidth]{babelDDeathsPlt.pdf}
-\label{org00eeee7}
+\label{org9da313d}
 \end{center}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org2edfc63,caption={Question 3: Projections of deaths using base ARIMA model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:orgd4aa3ba,caption={Question 3: Projections of deaths using base ARIMA model},captionpos=b,numbers=none]
 death_mod <- auto.arima(deaths$wk.deaths, d = 1)
 death_mod # fixed d = 1 or default auto.arima picks a worse model
 
@@ -659,7 +659,7 @@ autoplot(proj_deaths, main = "Death projections for next two weeks",
          ylab = "Deaths")
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org4770e49,caption={Question 3: Projections of deaths using backfitted ARIMA model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org1875317,caption={Question 3: Projections of deaths using backfitted ARIMA model},captionpos=b,numbers=none]
 sqdeaths <- deaths
 sqdeaths$wk.deaths <- sqrt(deaths$wk.deaths)
 
@@ -679,26 +679,26 @@ autoplot(sqd_proj,
          ylab = "Deaths")
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org490b51b,caption={Question 3: Visual residuals testing for base model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org7a97f27,caption={Question 3: Visual residuals testing for base model},captionpos=b,numbers=none]
 temp_death_mod <- arima(deaths$wk.deaths, c(3, 1, 0))
 
 ts.diag(temp_death_mod)
 \end{lstlisting}
 
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org9b65961,caption={Question 3: Visual residuals testing for back-fitted model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org1aea790,caption={Question 3: Visual residuals testing for back-fitted model},captionpos=b,numbers=none]
 temp_mod_sqd <- arima(sqdeaths$wk.deaths, c(2,1,2))
 
 ts.diag(temp_mod_sqd)
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orga15ebb1,caption={Question 3: Model values},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org5989d79,caption={Question 3: Model values},captionpos=b,numbers=none]
 death_mod
 mod_sqd
 \end{lstlisting}
 \section{Question 3 Fitting}
-\label{sec:org7e9d951}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org712b8e4,caption={Question 3: Stationarity testing},captionpos=b]
+\label{sec:orgae228c6}
+\begin{lstlisting}[language=r,label=lst:org67d242e,caption={Question 3: Stationarity testing},captionpos=b,numbers=none]
 adf.test(deaths$wk.deaths, nlag = 3)
 
 d.deaths <- deaths[-1,]
@@ -708,7 +708,7 @@ adf.test(d.deaths$wk.deaths, nlag = 3)
 \end{lstlisting}
 
 \phantomsection
-\label{orgf6d3646}
+\label{org317cf14}
 \begin{verbatim}
 Augmented Dickey-Fuller Test 
 alternative: stationary 
@@ -752,7 +752,7 @@ Type 3: with drift and trend
 Note: in fact, p.value = 0.01 means p.value <= 0.01
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org79766a7,caption={Question 3: Post-regression residual testing},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:orgf5d1ea2,caption={Question 3: Post-regression residual testing},captionpos=b,numbers=none]
 print("Testing for serial correlation:")
 Box.test(death_mod$residuals, lag = 2, type = c("Ljung-Box"))
 Box.test(mod_sqd$residuals, lag = 2, type = c("Ljung-Box"))
@@ -763,7 +763,7 @@ shapiro.test(mod_sqd$residuals)
 \end{lstlisting}
 
 \phantomsection
-\label{org6d72cba}
+\label{org6abd0f4}
 \begin{verbatim}
 [1] "Testing for serial correlation:"
 
@@ -792,8 +792,8 @@ data:  mod_sqd$residuals
 W = 0.77624, p-value = 4.818e-10
 \end{verbatim}
 \section{Question 4 Visualisations}
-\label{sec:org1e2be60}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orgaa2f3c3,caption={Question 4: Logged returns visualised},captionpos=b]
+\label{sec:org2019b16}
+\begin{lstlisting}[language=r,label=lst:org85d834e,caption={Question 4: Logged returns visualised},captionpos=b,numbers=none]
 ex_rat <- tibble(read.csv(here("data", "USD-GBP.csv")))
 
 ex_rat$Date <- strptime(ex_rat$Date, "%d/%m/%Y")
@@ -804,27 +804,25 @@ ex_returns$USD.GBP.Close <- diff(log(ex_rat$USD.GBP.Close))
 ts.plot(ex_returns$USD.GBP.Close)
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org4580f33,caption={Visual residuals test for ARIMA model},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org0126790,caption={Visual residuals test for ARIMA model},captionpos=b,numbers=none]
 ts.diag(arima_mod_post)
 \end{lstlisting}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{babelTSDAGExPostEPlts.pdf}
-\caption{\label{fig:orgc90178d}Visual residuals test for ARIMA model}
+\caption{\label{fig:orgef1388e}Visual residuals test for ARIMA model}
 \end{figure}
 \section{Question 4 Fitting}
-\label{sec:org8f81dd5}
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:orgf7dd03e,caption={Question 4: Stationarity testing},captionpos=b]
+\label{sec:org3bef462}
+\begin{lstlisting}[language=r,label=lst:org223154b,caption={Question 4: Stationarity testing},captionpos=b,numbers=none]
 adf.test(ex_returns$USD.GBP.Close, nlag = 2)
 \end{lstlisting}
 
 \phantomsection
-\label{org356a3d3}
+\label{org3a682ce}
 \begin{verbatim}
-+ + > null device 
-          1 
-> . + > Augmented Dickey-Fuller Test 
+Augmented Dickey-Fuller Test 
 alternative: stationary 
  
 Type 1: no drift no trend 
@@ -843,7 +841,7 @@ Type 3: with drift and trend
 Note: in fact, p.value = 0.01 means p.value <= 0.01
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org1cb42d0,caption={Pre-Post Crisis split},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org63f9454,caption={Pre-Post Crisis split},captionpos=b,numbers=none]
 ## We can use dplyr to filter by criteria
 ## I think tidyverse masks filter but we call it explicitly
 pre_crash <- ex_returns %>%
@@ -861,7 +859,7 @@ sprintf("the post-crash data ranges from %s to %s.",
         as.character(post_dur[1,]), as.character(post_dur[2]))
 \end{lstlisting}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org9613795,caption={Question 4: ARIMA mean model fitting},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:orgf80e3cd,caption={Question 4: ARIMA mean model fitting},captionpos=b,numbers=none]
 auto.arima(pre_crash$USD.GBP.Close)
 auto.arima(post_crash$USD.GBP.Close)
 
@@ -876,7 +874,7 @@ Box.test(arima_mod_post$residuals, lag = 2, type = c("Ljung-Box"))
 \end{lstlisting}
 
 \phantomsection
-\label{orgb304893}
+\label{org775da50}
 \begin{verbatim}
 Series: pre_crash$USD.GBP.Close 
 ARIMA(0,0,1) with zero mean 
@@ -923,7 +921,7 @@ data:  arima_mod_post$residuals
 X-squared = 0.50344, df = 2, p-value = 0.7775
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org4548abb,caption={Question 4: ARCH test},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org1129c17,caption={Question 4: ARCH test},captionpos=b,numbers=none]
 suppressMessages(library(FinTS))
 
 ArchTest(pre_crash$USD.GBP.Close)
@@ -931,7 +929,7 @@ ArchTest(post_crash$USD.GBP.Close)
 \end{lstlisting}
 
 \phantomsection
-\label{orgbba38b8}
+\label{org322d1b8}
 \begin{verbatim}
 
 	ARCH LM-test; Null hypothesis: no ARCH effects
@@ -946,7 +944,7 @@ data:  post_crash$USD.GBP.Close
 Chi-squared = 164.29, df = 12, p-value < 2.2e-16
 \end{verbatim}
 
-\begin{lstlisting}[frame=lines,basicstyle=\footnotesize,numbers=left,numberstyle=\tiny,language=r,label=lst:org2a04138,caption={Question 4: GARCH Model Fitting},captionpos=b]
+\begin{lstlisting}[language=r,label=lst:org7f2cef7,caption={Question 4: GARCH Model Fitting},captionpos=b,numbers=none]
 suppressMessages(library(fGarch))
 
 ## iterating over models for pre-crisis
@@ -978,7 +976,7 @@ summary(grm_post)
 \end{lstlisting}
 
 \phantomsection
-\label{orgebfb41a}
+\label{orgce48fe1}
 \begin{verbatim}
 
 Title:
@@ -996,8 +994,10 @@ Conditional Distribution:
  norm 
 
 Coefficient(s):
-         mu          ar1          ma1          ma2        omega       alpha1        beta1  
- 3.5594e-04  -9.9023e-01   9.9098e-01   7.8292e-03   2.5224e-07   4.6400e-02   9.4962e-01  
+         mu          ar1          ma1          ma2        omega       alpha1  
+ 3.5594e-04  -9.9023e-01   9.9098e-01   7.8292e-03   2.5224e-07   4.6400e-02  
+      beta1  
+ 9.4962e-01  
 
 Std. Errors:
  based on Hessian 
@@ -1018,7 +1018,7 @@ Log Likelihood:
  7190.182    normalized:  3.802317 
 
 Description:
- Wed Dec 17 16:58:12 2025 by user:  
+ Tue Dec 30 17:28:04 2025 by user:  
 
 
 Standardised Residuals Tests:
@@ -1053,8 +1053,10 @@ Conditional Distribution:
  norm 
 
 Coefficient(s):
-         mu          ar1          ar2          ma1        omega       alpha1        beta1  
--4.9340e-05   1.9265e-01  -2.5909e-02  -1.8975e-01   2.9106e-07   4.4219e-02   9.4923e-01  
+         mu          ar1          ar2          ma1        omega       alpha1  
+-4.9340e-05   1.9265e-01  -2.5909e-02  -1.8975e-01   2.9106e-07   4.4219e-02  
+      beta1  
+ 9.4923e-01  
 
 Std. Errors:
  based on Hessian 
@@ -1075,7 +1077,7 @@ Log Likelihood:
  4510.89    normalized:  3.640751 
 
 Description:
- Wed Dec 17 16:58:13 2025 by user:  
+ Tue Dec 30 17:28:04 2025 by user:  
 
 
 Standardised Residuals Tests:

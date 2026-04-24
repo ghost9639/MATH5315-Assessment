@@ -1,27 +1,27 @@
 #+TITLE: MATH5306 Assessment
 #+AUTHOR: 201605543
 #+OPTIONS: toc:nil prop:nil
-#+LATEX_CLASS: article
-#+LATEX_CLASS_OPTIONS: [a4paper]
-#+LATEX_HEADER: \usepackage{fontspec}
-#+LATEX_HEADER: \setmainfont{Times New Roman}
-#+LATEX_HEADER: \usepackage{amsmath}
-#+LATEX_HEADER: \usepackage[utf8]{inputenc}
-#+LATEX_HEADER: \usepackage{natbib}
-#+LATEX_HEADER: \usepackage{graphicx}
-#+LATEX_HEADER: \usepackage{hyperref}
-#+latex_header: \usepackage{listings}
-#+latex_header: \usepackage{xcolor}
-#+LATEX_HEADER: \lstset{backgroundcolor=\color{gray!10},basicstyle=\ttfamily\small,breaklines=true,showspaces=false, showstringspaces=false}
-#+latex_header: \renewcommand{\topfraction}{0.85}
-#+latex_header: \renewcommand{\bottomfraction}{0.7}
-#+latex_header: \renewcommand{\textfraction}{0.1}
-#+latex_header: \renewcommand{\floatpagefraction}{0.75}
+#+LATEX_CLASS: article-lua
+# #+LATEX_CLASS_OPTIONS: [a4paper]
+# #+LATEX_HEADER: \usepackage{fontspec}
+# #+LATEX_HEADER: \setmainfont{Times New Roman}
+# #+LATEX_HEADER: \usepackage[utf8]{inputenc}
+# #+LATEX_HEADER: \usepackage{natbib}
+# #+latex_header: \usepackage{amsmath}
+# #+LATEX_HEADER: \usepackage{graphicx}
+# #+LATEX_HEADER: \usepackage{hyperref}
+# #+latex_header: \usepackage{listings}
+# #+latex_header: \usepackage{xcolor}
+# #+LATEX_HEADER: \lstset{backgroundcolor=\color{gray!10},basicstyle=\ttfamily\small,breaklines=true,showspaces=false, showstringspaces=false}
+# #+latex_header: \renewcommand{\topfraction}{0.85}
+# #+latex_header: \renewcommand{\bottomfraction}{0.7}
+# #+latex_header: \renewcommand{\textfraction}{0.1}
+# #+latex_header: \renewcommand{\floatpagefraction}{0.75}
 
 
 \tableofcontents
 \flushleft
-* Question 1
+* Pearson Family Fitting (Battery Lifespans)
 
 We are given a set of hard drive lifetimes to analyse. If we want to predict their lifetimes, the easiest method is to fit a common survival model like the exponential distribution. If we give R the data, we can very quickly visualise it using a histogram and box-plot. See Appendix [[#app:Q1Viz1]] for the commands. We can visually see that the battery lifetimes follow a logarithmic-like distribution (Figure 1), and could easily be fitted by a standard survival analysis curve like the exponential distribution. We can also see a high length of outliers however, and this could pull the curve away from the bulkier half of the curve that die within 5 years. Observing the box-plot closer, we can see the median is quite low within the interquartile range, implying further that summary statistics are being dragged up by values above the mean ranging far higher above the mean than the values below the median range below it. 
 
@@ -54,7 +54,7 @@ Looking at Table 1, both information criteria have lower values for the exponent
 
 
 \newpage
-* Question 2
+* ARIMA and VAR (Stock Close Prices)
 We are given a set of European stock closing prices, and are asked to predict future trends. In order to fit time series models to the data, a common assumption is stationarity, or weakly a non-unit mean. Observing a plot of the dataset (Figure 4, made in Appendix [[#app:Q2Viz]]), we can see that the data visually is not stationary.. Firstly, we consider the specific series for the DAX closing prices. Observing Figure 5, we see that the ACFs for the DAX do not decrease in a geometric fashion, suggesting the series is not stationary. We can formally confirm this using an augmented Dickey-Fuller test, we have to take the first difference of the series in order to have stationarity (Appendix [[#app:Q2Fit]]). With stationary data, we can use the R forecast package to fit a time series model. We can fit an MA(p), AR(q), and ARMA(p, q) model to the dataset, but after fitting the optimal options of each, the ARIMA(0, 1, 1) model had the best AIC (Appendix [[#app:Q2Fit]]). 
 
 #+caption: European Index Closing Prices
@@ -90,7 +90,7 @@ We can use this ARIMA model to predict future closing prices for the DAX, and pl
 
 
 After completing both models, an analysis of the residuals from the ARMA regression reveals that the residuals were not normal at all (Appendix [[#app:Q2Fit]]). This is likely reflective of non-constant variance, which ARIMA is not robust against. On the other hand, the VAR post-regression statistics showed no sign of serial correlation and had normal residuals (Appendix [[#app:var]]), implying that the data satisfies all of the bias and efficiency assumptions typically placed on VAR modelling. Co-integration can be an incredibly powerful tool, and, in this case, offered a more robust model when all data was considered than just the one where only the DAX itself was considered.
-* Question 3
+* ARIMA (COVID Mortality)
 
 For this question, we are given a univariate time series of deaths in the United Kingdom due to COVID-19. We can make two models to predict this, one fitting an ARIMA to the raw data, and the other fitting an ARIMA model to the square rooted data. We can see from a visualisation that COVID deaths over time have two extreme spikes, constantly declining ACFs, and PACFs that do not completely drop after 2 lags (Appendix [[#app:Q3Viz]]). We can also test this formally with an augmented Dickey-Fuller test. Consequently, we have to take the first difference, which we can show are stationary (Appendix [[#app:Q3Fit]]). 
 
@@ -150,7 +150,7 @@ For the back-fitted model, the first auto-regression has a very large positive v
 #+RESULTS: Q3SQDeathTests
 [[file:babelTSDiagSQDeath.pdf]]
 
-* Question 4
+* GARCH Modelling (Stock Returns)
 We are given a univariate time series of exchange rates between the US Dollar and British Pound over 12 years. We want to understand changes in volatility before and after the credit crisis. If we want to stochastically model volatility, we can use the GARCH model. This model expects returns, so we can take the logged returns (Appendix [[#app:Q4Viz]]). Looking at Figure 13, the data visually looks stationary. We confirm this using a augmented Dickey-Fuller test in Appendix [[#app:Q4Fit]]. 
 
 #+attr_latex: :float t :width 0.8\linewidth :height 0.4\textheight :keepaspectratio
@@ -185,83 +185,7 @@ The pre-crisis GARCH model has an \alpha of $4.64 \times 10^{-2}$, and a \beta o
 
 This document was compiled by lualatex (LuaHBTeX, Version 1.21.0) in Emacs (30.2) using org-babel (9.7.37). All source code blocks were evaluated in place, and are entirely functional without any additional code beyond specified libraries. The accompanying .rmd file uses the same code, but in the correct order. This appendix is laid out for block readability, while the .rmd has the overall logic and hopefully reproducible method.
 
-* Question 1 Visualisations
-:PROPERTIES:
-:CUSTOM_ID: app:Q1Viz1
-:END:
 
-#+name: babBatDistViz
-#+caption: Question 1: Visualisation of hard drive lifetimes
-#+begin_src R :session MyR :results graphics file :file babelBatteryDist.pdf :exports both
-  suppressMessages(library(tidyverse))
-  suppressMessages(library(here))
-  suppressMessages(library(patchwork))
-  
-  hard_drives <- read.table(here("data", "hard_drive.txt"))
-
-  hard_drives <- tibble(hard_drives[1])
-  hard_drives$V1 <- as.numeric(hard_drives$V1)
-
-  plt <- ggplot(data = hard_drives, aes(x=V1))
-  plt <- plt + geom_histogram(binwidth = 0.5)
-  plt <- plt + labs(title = "Lifetimes of batteries", x = "Years")
-
-  plt2 <- ggplot (data = hard_drives, aes(x=V1))
-  plt2 <- plt2 + geom_boxplot()
-  plt2 <- plt2 + labs(title = "Boxplot of battery lives", x = "Years")
-
-  (plt / plt2) 
-#+end_src
-
-#+name: babQ1VizFit
-#+caption: Question 1: fitted model
-#+begin_src R :session MyR :results graphics file :file babelHardDriveLifeFit.pdf :exports both
-hist(x=hard_drives$V1, freq = FALSE, breaks = 10,
-     main = "Histogram of hard drive lifetimes with fitted distributions",
-     xlab = "Hard Drive Lifetimes (years)")
-
-curve(dexp(x, rate = exp_mod$estimate["rate"]),
-      add = TRUE, col = "red", lwd = 2)
-
-curve(dgamma(x, rate = gam_mod$estimate["rate"],
-             shape = gam_mod$estimate["shape"]),
-      add = TRUE, col = "blue", lwd= 2)
-#+end_src
-
-#+name: babQ1Sim
-#+caption: Question 1: Simulated models
-#+begin_src R :session MyR :results graphics file :file babelQ1Simulations.pdf :exports both
-set.seed(1234)
-exp_sim <- rexp(n = 10000, rate = exp_rate)
-gam_sim <- rgamma(n = 10000, shape = gam_shape, rate = gam_rate)
-sims <- data.frame(exp_sim, gam_sim)
-
-## gamma histogram
-plt3 <- ggplot(data = sims, aes(x=gam_sim))
-plt3 <- plt3 + geom_histogram(binwidth = 0.5)
-plt3 <- plt3 + labs(title = "Gamma simulated lifetimes", x = "Years")
-
-## gamma boxplot
-plt4 <- ggplot (data = sims, aes(x=gam_sim))
-plt4 <- plt4 + geom_boxplot()
-plt4 <- plt4 + labs(title = "Gamma simulated summary", x = "Years")
-
-## exponential histogram
-plt5 <- ggplot(data = sims, aes(x=exp_sim))
-plt5 <- plt5 + geom_histogram(binwidth = 0.5)
-plt5 <- plt5 + labs(title = "Exponential simulated lifetimes", x = "Years")
-
-## gamma boxplot
-plt6 <- ggplot (data = sims, aes(x=exp_sim))
-plt6 <- plt6 + geom_boxplot()
-plt6 <- plt6 + labs(title = "Exponential simulated summary", x = "Years")
-
-## plt  plt2
-## plt3 plt4
-## plt5 plt6
-
-(plt | plt2) / (plt3 | plt4) / (plt5 | plt6)
-#+end_src
 
 * Question 1 Fitting
 :PROPERTIES:
@@ -350,48 +274,84 @@ head(fit_stats)
 #+end_src
 
 
-* Question 2 Visualisations
+* Question 1 Visualisations
 :PROPERTIES:
-:CUSTOM_ID: app:Q2Viz
+:CUSTOM_ID: app:Q1Viz1
 :END:
 
-#+name: eurotsplt
-#+caption: Time series plotting of European Indices data
-#+begin_src R :session MyR :results graphics file :file babelStockClosePlt.pdf :exports both
-dclose <- tibble(read.csv(here("data", "EuroIndices_Close.csv")))
+#+name: babBatDistViz
+#+caption: Question 1: Visualisation of hard drive lifetimes
+#+begin_src R :session MyR :results graphics file :file babelBatteryDist.pdf :exports both
+  suppressMessages(library(tidyverse))
+  suppressMessages(library(here))
+  suppressMessages(library(patchwork))
+  
+  hard_drives <- read.table(here("data", "hard_drive.txt"))
 
-## lubridate supplies dmy parsing
-dclose$Date <- strptime(dclose$Date, "%b %d, %y")
+  hard_drives <- tibble(hard_drives[1])
+  hard_drives$V1 <- as.numeric(hard_drives$V1)
 
-plt <- ggplot(data = dclose, aes(x = as.POSIXct(Date)))
-plt <- plt + geom_line(aes(y = AEX_Close, colour = "AEX")) +
-    geom_line(aes(y = BEL20_Close, colour = "BEL20"))+
-    geom_line(aes(y = CAC40_Close, colour = "CAC40")) +
-    geom_line(aes(y = DAX_Close, colour = "DAX")) +
-    labs(title = "European Indices",
-         y = "Closing Price (€)",
-         x = "Time")
-plt
+  plt <- ggplot(data = hard_drives, aes(x=V1))
+  plt <- plt + geom_histogram(binwidth = 0.5)
+  plt <- plt + labs(title = "Lifetimes of batteries", x = "Years")
+
+  plt2 <- ggplot (data = hard_drives, aes(x=V1))
+  plt2 <- plt2 + geom_boxplot()
+  plt2 <- plt2 + labs(title = "Boxplot of battery lives", x = "Years")
+
+  (plt / plt2) 
 #+end_src
 
-#+name: DAXACFs
-#+caption: Visualisation of ACFs and PACFs for DAX closing price
-#+begin_src R :session MyR :results graphics file :file babelACFPACFDAX.pdf :exports both
-  par(mfrow = c(2,1))
+#+name: babQ1VizFit
+#+caption: Question 1: fitted model
+#+begin_src R :session MyR :results graphics file :file babelHardDriveLifeFit.pdf :exports both
+hist(x=hard_drives$V1, freq = FALSE, breaks = 10,
+     main = "Histogram of hard drive lifetimes with fitted distributions",
+     xlab = "Hard Drive Lifetimes (years)")
 
-  acf(dclose$DAX_Close, main = "ACFs for DAX Close")
-  pacf(dclose$DAX_Close, main = "Partial ACFs for DAX Close")
+curve(dexp(x, rate = exp_mod$estimate["rate"]),
+      add = TRUE, col = "red", lwd = 2)
 
-  par(mfrow = c(1,1))
+curve(dgamma(x, rate = gam_mod$estimate["rate"],
+             shape = gam_mod$estimate["shape"]),
+      add = TRUE, col = "blue", lwd= 2)
 #+end_src
 
-#+name: Q2ARIMAPred
-#+caption: Predictions for DAX index from ARIMA model
-#+begin_src R :session MyR :results graphics file :file babelProjDAX20.pdf :exports both
-  Q2_arima_proj <- forecast(mod_arima_DAX, h = 10)
+#+name: babQ1Sim
+#+caption: Question 1: Simulated models
+#+begin_src R :session MyR :results graphics file :file babelQ1Simulations.pdf :exports both
+set.seed(1234)
+exp_sim <- rexp(n = 10000, rate = exp_rate)
+gam_sim <- rgamma(n = 10000, shape = gam_shape, rate = gam_rate)
+sims <- data.frame(exp_sim, gam_sim)
 
-  autoplot(Q2_arima_proj, ylab = "DAX20 Closing Price")
+## gamma histogram
+plt3 <- ggplot(data = sims, aes(x=gam_sim))
+plt3 <- plt3 + geom_histogram(binwidth = 0.5)
+plt3 <- plt3 + labs(title = "Gamma simulated lifetimes", x = "Years")
+
+## gamma boxplot
+plt4 <- ggplot (data = sims, aes(x=gam_sim))
+plt4 <- plt4 + geom_boxplot()
+plt4 <- plt4 + labs(title = "Gamma simulated summary", x = "Years")
+
+## exponential histogram
+plt5 <- ggplot(data = sims, aes(x=exp_sim))
+plt5 <- plt5 + geom_histogram(binwidth = 0.5)
+plt5 <- plt5 + labs(title = "Exponential simulated lifetimes", x = "Years")
+
+## gamma boxplot
+plt6 <- ggplot (data = sims, aes(x=exp_sim))
+plt6 <- plt6 + geom_boxplot()
+plt6 <- plt6 + labs(title = "Exponential simulated summary", x = "Years")
+
+## plt  plt2
+## plt3 plt4
+## plt5 plt6
+
+(plt | plt2) / (plt3 | plt4) / (plt5 | plt6)
 #+end_src
+
 
 * Question 2 Fitting
 :PROPERTIES:
@@ -571,102 +531,51 @@ $Kurtosis
 data:  Residuals of VAR object VAR_temp_mod
 Chi-squared = 22.353, df = 4, p-value = 0.0001705
 #+end_example
-* Question 3 Visualisations
+
+
+* Question 2 Visualisations
 :PROPERTIES:
-:CUSTOM_ID: app:Q3Viz
+:CUSTOM_ID: app:Q2Viz
 :END:
 
-#+name: Q3DeathsViz
-#+caption: Question 3: Visualisation of deaths and ACFs
-#+begin_src R :session MyR :results graphics file :file babelDeathPlot.pdf :exports both
-deaths <- tibble(read.csv(here("data", "deaths.csv")))
+#+name: eurotsplt
+#+caption: Time series plotting of European Indices data
+#+begin_src R :session MyR :results graphics file :file babelStockClosePlt.pdf :exports both
+dclose <- tibble(read.csv(here("data", "EuroIndices_Close.csv")))
 
-deaths$date <- strptime(deaths$date, "%Y-%m-%d")
+## lubridate supplies dmy parsing
+dclose$Date <- strptime(dclose$Date, "%b %d, %y")
 
-par(mfrow = c(3,1))
-
-ts.plot(deaths$wk.deaths, main = "Deaths over time",
-        ylab = "Deaths")
-acf(deaths$wk.deaths, main = "ACFs for deaths")
-pacf(deaths$wk.deaths, main = "PACFs for deaths")
-
-par(mfrow = c(1,1))
+plt <- ggplot(data = dclose, aes(x = as.POSIXct(Date)))
+plt <- plt + geom_line(aes(y = AEX_Close, colour = "AEX")) +
+    geom_line(aes(y = BEL20_Close, colour = "BEL20"))+
+    geom_line(aes(y = CAC40_Close, colour = "CAC40")) +
+    geom_line(aes(y = DAX_Close, colour = "DAX")) +
+    labs(title = "European Indices",
+         y = "Closing Price (€)",
+         x = "Time")
+plt
 #+end_src
 
-#+caption: Question 3: Visualisation of deaths and ACFs
-#+attr_latex: :float t :width 0.8\linewidth :height 0.4\textheight :keepaspectratio
-#+RESULTS: Q3DeathsViz
-[[file:babelDeathPlot.pdf]]
+#+name: DAXACFs
+#+caption: Visualisation of ACFs and PACFs for DAX closing price
+#+begin_src R :session MyR :results graphics file :file babelACFPACFDAX.pdf :exports both
+  par(mfrow = c(2,1))
 
-#+name: Q3DDeathsViz
-#+caption: Question 3: Visualisation of change in deaths and ACFs
-#+begin_src R :session MyR :results graphics file :file babelDDeathsPlt.pdf :exports both
-par(mfrow = c(3,1))
+  acf(dclose$DAX_Close, main = "ACFs for DAX Close")
+  pacf(dclose$DAX_Close, main = "Partial ACFs for DAX Close")
 
-ts.plot(d.deaths$wk.deaths, main = "Change in deaths over time",
-        ylab = "Deaths")
-acf(d.deaths$wk.deaths, main = " ")
-pacf(d.deaths$wk.deaths, main = " ")
-
-par(mfrow = c(1,1))
+  par(mfrow = c(1,1))
 #+end_src
 
-#+name: Q3DeathProj
-#+caption: Question 3: Projections of deaths using base ARIMA model
-#+begin_src R :session MyR :results graphics file :file babelDeathsProjections.pdf :exports both
-death_mod <- auto.arima(deaths$wk.deaths, d = 1)
-death_mod # fixed d = 1 or default auto.arima picks a worse model
+#+name: Q2ARIMAPred
+#+caption: Predictions for DAX index from ARIMA model
+#+begin_src R :session MyR :results graphics file :file babelProjDAX20.pdf :exports both
+  Q2_arima_proj <- forecast(mod_arima_DAX, h = 10)
 
-proj_deaths <- forecast::forecast(death_mod, h = 2)
-autoplot(proj_deaths, main = "Death projections for next two weeks",
-         ylab = "Deaths")
+  autoplot(Q2_arima_proj, ylab = "DAX20 Closing Price")
 #+end_src
 
-#+name: Q3SQDeathProj
-#+caption: Question 3: Projections of deaths using backfitted ARIMA model
-#+begin_src R :session MyR :results graphics file :file babelSQDeathsProjections.pdf :exports both
-sqdeaths <- deaths
-sqdeaths$wk.deaths <- sqrt(deaths$wk.deaths)
-
-mod_sqd <- auto.arima(sqdeaths$wk.deaths, d = 1)
-
-sqd_proj <- forecast::forecast(mod_sqd, h = 2)
-
-sqd_proj$x <- sqd_proj$x^2
-sqd_proj$fitted <- sqd_proj$fitted^2
-sqd_proj$lower <- sqd_proj$lower^2
-sqd_proj$upper <- sqd_proj$upper^2
-sqd_proj$mean <- sqd_proj$mean^2
-sqd_proj$residuals <- sqd_proj$residuals^2
-
-autoplot(sqd_proj,
-         main = "Back-fitted projections from rooted deaths",
-         ylab = "Deaths")
-#+end_src
-
-#+name: Q3DeathTests
-#+caption: Question 3: Visual residuals testing for base model
-#+begin_src R :session MyR :results graphics file :file babelTSDiagDeath.pdf :exports both
-temp_death_mod <- arima(deaths$wk.deaths, c(3, 1, 0))
-
-ts.diag(temp_death_mod)
-#+end_src
-
-
-#+name: Q3SQDeathTests
-#+caption: Question 3: Visual residuals testing for back-fitted model
-#+begin_src R :session MyR :results graphics file :file babelTSDiagSQDeath.pdf :exports both
-temp_mod_sqd <- arima(sqdeaths$wk.deaths, c(2,1,2))
-
-ts.diag(temp_mod_sqd)
-#+end_src
-
-#+name: Q3ModValues
-#+caption: Question 3: Model values
-#+begin_src R :session MyR :results output :exports both
-  death_mod
-  mod_sqd
-#+end_src
 
 * Question 3 Fitting
 :PROPERTIES:
@@ -771,33 +680,104 @@ data:  mod_sqd$residuals
 W = 0.77624, p-value = 4.818e-10
 #+end_example
 
-* Question 4 Visualisations
+
+* Question 3 Visualisations
 :PROPERTIES:
-:CUSTOM_ID: app:Q4Viz
+:CUSTOM_ID: app:Q3Viz
 :END:
 
-#+name: Q4RetViz
-#+caption: Question 4: Logged returns visualised
-#+begin_src R :session MyR :results graphics file :file babelEXRetTSPLT.pdf :exports both
-  ex_rat <- tibble(read.csv(here("data", "USD-GBP.csv")))
+#+name: Q3DeathsViz
+#+caption: Question 3: Visualisation of deaths and ACFs
+#+begin_src R :session MyR :results graphics file :file babelDeathPlot.pdf :exports both
+deaths <- tibble(read.csv(here("data", "deaths.csv")))
 
-  ex_rat$Date <- strptime(ex_rat$Date, "%d/%m/%Y")
+deaths$date <- strptime(deaths$date, "%Y-%m-%d")
 
-  ex_returns <- ex_rat[-1,]
-  ex_returns$USD.GBP.Close <- diff(log(ex_rat$USD.GBP.Close))
+par(mfrow = c(3,1))
 
-  ts.plot(ex_returns$USD.GBP.Close)
+ts.plot(deaths$wk.deaths, main = "Deaths over time",
+        ylab = "Deaths")
+acf(deaths$wk.deaths, main = "ACFs for deaths")
+pacf(deaths$wk.deaths, main = "PACFs for deaths")
+
+par(mfrow = c(1,1))
 #+end_src
 
-#+name: Q4ARIMARes
-#+caption: Visual residuals test for ARIMA model
-#+begin_src R :session MyR :results graphics file :file babelTSDAGExPostEPlts.pdf :exports both
-  ts.diag(arima_mod_post)
+#+caption: Question 3: Visualisation of deaths and ACFs
+#+attr_latex: :float t :width 0.8\linewidth :height 0.4\textheight :keepaspectratio
+#+RESULTS: Q3DeathsViz
+[[file:babelDeathPlot.pdf]]
+
+#+name: Q3DDeathsViz
+#+caption: Question 3: Visualisation of change in deaths and ACFs
+#+begin_src R :session MyR :results graphics file :file babelDDeathsPlt.pdf :exports both
+par(mfrow = c(3,1))
+
+ts.plot(d.deaths$wk.deaths, main = "Change in deaths over time",
+        ylab = "Deaths")
+acf(d.deaths$wk.deaths, main = " ")
+pacf(d.deaths$wk.deaths, main = " ")
+
+par(mfrow = c(1,1))
 #+end_src
 
-#+caption: Visual residuals test for ARIMA model
-#+RESULTS: Q4ARIMARes
-[[file:babelTSDAGExPostEPlts.pdf]]
+#+name: Q3DeathProj
+#+caption: Question 3: Projections of deaths using base ARIMA model
+#+begin_src R :session MyR :results graphics file :file babelDeathsProjections.pdf :exports both
+death_mod <- auto.arima(deaths$wk.deaths, d = 1)
+death_mod # fixed d = 1 or default auto.arima picks a worse model
+
+proj_deaths <- forecast::forecast(death_mod, h = 2)
+autoplot(proj_deaths, main = "Death projections for next two weeks",
+         ylab = "Deaths")
+#+end_src
+
+#+name: Q3SQDeathProj
+#+caption: Question 3: Projections of deaths using backfitted ARIMA model
+#+begin_src R :session MyR :results graphics file :file babelSQDeathsProjections.pdf :exports both
+sqdeaths <- deaths
+sqdeaths$wk.deaths <- sqrt(deaths$wk.deaths)
+
+mod_sqd <- auto.arima(sqdeaths$wk.deaths, d = 1)
+
+sqd_proj <- forecast::forecast(mod_sqd, h = 2)
+
+sqd_proj$x <- sqd_proj$x^2
+sqd_proj$fitted <- sqd_proj$fitted^2
+sqd_proj$lower <- sqd_proj$lower^2
+sqd_proj$upper <- sqd_proj$upper^2
+sqd_proj$mean <- sqd_proj$mean^2
+sqd_proj$residuals <- sqd_proj$residuals^2
+
+autoplot(sqd_proj,
+         main = "Back-fitted projections from rooted deaths",
+         ylab = "Deaths")
+#+end_src
+
+#+name: Q3DeathTests
+#+caption: Question 3: Visual residuals testing for base model
+#+begin_src R :session MyR :results graphics file :file babelTSDiagDeath.pdf :exports both
+temp_death_mod <- arima(deaths$wk.deaths, c(3, 1, 0))
+
+ts.diag(temp_death_mod)
+#+end_src
+
+
+#+name: Q3SQDeathTests
+#+caption: Question 3: Visual residuals testing for back-fitted model
+#+begin_src R :session MyR :results graphics file :file babelTSDiagSQDeath.pdf :exports both
+temp_mod_sqd <- arima(sqdeaths$wk.deaths, c(2,1,2))
+
+ts.diag(temp_mod_sqd)
+#+end_src
+
+#+name: Q3ModValues
+#+caption: Question 3: Model values
+#+begin_src R :session MyR :results output :exports both
+  death_mod
+  mod_sqd
+#+end_src
+
 
 * Question 4 Fitting
 :PROPERTIES:
@@ -1090,6 +1070,38 @@ Information Criterion Statistics:
       AIC       BIC       SIC      HQIC 
 -7.270202 -7.241264 -7.270266 -7.259319
 #+end_example
+
+
+
+* Question 4 Visualisations
+:PROPERTIES:
+:CUSTOM_ID: app:Q4Viz
+:END:
+
+#+name: Q4RetViz
+#+caption: Question 4: Logged returns visualised
+#+begin_src R :session MyR :results graphics file :file babelEXRetTSPLT.pdf :exports both
+  ex_rat <- tibble(read.csv(here("data", "USD-GBP.csv")))
+
+  ex_rat$Date <- strptime(ex_rat$Date, "%d/%m/%Y")
+
+  ex_returns <- ex_rat[-1,]
+  ex_returns$USD.GBP.Close <- diff(log(ex_rat$USD.GBP.Close))
+
+  ts.plot(ex_returns$USD.GBP.Close)
+#+end_src
+
+#+name: Q4ARIMARes
+#+caption: Visual residuals test for ARIMA model
+#+begin_src R :session MyR :results graphics file :file babelTSDAGExPostEPlts.pdf :exports both
+  ts.diag(arima_mod_post)
+#+end_src
+
+#+caption: Visual residuals test for ARIMA model
+#+RESULTS: Q4ARIMARes
+[[file:babelTSDAGExPostEPlts.pdf]]
+
+
 
 # Local Variables:
 # jinx-local-words: "Forex"

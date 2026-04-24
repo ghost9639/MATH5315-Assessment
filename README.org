@@ -1,45 +1,24 @@
+#+title: Time Series Modelling
+#+author: R
 
-# Table of Contents
+* Project Specifications
 
-1.  [Project Specifications](#orgbe653a5)
-2.  [Pearson Family Fitting (Battery Lifespans)](#org8f12f88)
-3.  [ARIMA and VAR (Stock Close Prices)](#org3d15217)
-4.  [ARIMA (COVID Mortality)](#org8b78ece)
-5.  [GARCH Modelling (Stock Returns)](#orgcbcd4bd)
+This is a project exploring a wide variety of datasets, from financial to industry production, and evaluating them using standard time series methods. All datasets have been included in data/, and the code is linked and explained in [[file:src/Main.rmd][a markdown file]]. A full [[file:Project.pdf][report]] has been compiled as well.
 
 
-
-<a id="orgbe653a5"></a>
-
-# Project Specifications
-
-This is a project exploring a wide variety of datasets, from financial to industry production, and evaluating them using standard time series methods. All datasets have been included in data/, and the code is linked and explained in [a markdown file](src/Main.rmd). A full [report](Project.pdf) has been compiled as well.
-
-
-<a id="org8f12f88"></a>
-
-# Pearson Family Fitting (Battery Lifespans)
+* Pearson Family Fitting (Battery Lifespans)
 
 The first section predicts the likelihood of a battery failing within a certain period using the Pearson family of distributions. After examining the Kolmogorov-Smirnov test, AIC, and BIC values, it was concluded that the exponential distribution was the most accurate, but plots are made for both.
 
-
-<a id="org3d15217"></a>
-
-# ARIMA and VAR (Stock Close Prices)
+* ARIMA and VAR (Stock Close Prices)
 
 ARIMA is applied to stock close price datasets in order to estimate near future stock prices. After concluding that serial correlation was too much of a problem for estimating the individual stocks, the choice was made to fit an Engle-Granger model instead, with greater explanatory power for a set of cointegrated stocks and more datapoints to use to avoid serial correlation. Predictions were then generated and visualised for the portfolio, and no evidence of serial correlation or inappropriate residuals was discovered in post regression testing.
 
-
-<a id="org8b78ece"></a>
-
-# ARIMA (COVID Mortality)
+* ARIMA (COVID Mortality)
 
 ARIMA and log ARIMA models were fitted and compared with an extreme focus on model fit and testing. Keen attention paid to evidence of continued non-stationarity through ACF plots and augmented Dickey-Fuller testing. Projections were generated and compared for near future mortality due to COVID.
 
-
-<a id="orgcbcd4bd"></a>
-
-# GARCH Modelling (Stock Returns)
+* GARCH Modelling (Stock Returns)
 
 Conversion of stock prices to stock returns was followed for ARCH testing. After non-random volatility was detected and an aDF test confirmed non-unit variance, a GARCH model was fitted. Post regression testing examined a suite of tests to ensure parameter selection was appropriate, and model alpha and beta carefully evaluated and explained in simple terms.
 

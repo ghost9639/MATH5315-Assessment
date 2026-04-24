@@ -1,12 +1,3 @@
----
-title: "MATH5315 Assessment"
-author: "201605543"
----
-
-## Boilerplate and reproducibility
-Firstly, we need to install any missing packages (will depend on your device)
-
-```{r, echo = FALSE}
 install.packages("tidyverse") # plots and variable handling
 install.packages("here")      # reproducible file searching
 install.packages("aTSA")      # stationarity hypothesis testing
@@ -14,22 +5,10 @@ install.packages("forecast")  # ARIMA modelling
 install.packages("vars")      # VAR model
 install.packages("fGarch")    # GARCH model
 install.packages("FinTS")     # ArchTest function
-```
 
-I make projects in git directories and tend to use here for stability. here will recognise any .git/ or rstudio project declarations, but if you want to tell it where the root is, just make a blank .here file wherever you want it to start searching from. Depending on how your workspace is structured, it may be better for you to just set a working directory and edit the file calls directly.
 
-```{r, echo = FALSE}
 here::here() # should echo back your project root
-```
 
-This .rmd file was evaluated using R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble". All packages were reinstalled on 14/12/2025.
-
-## Question 1
-
-To start with, we need to read in our values into a data-frame, and maybe pull out some summary statistics.
-
-# Exports: output
-```{r, echo = FALSE}
 suppressMessages(library(tidyverse))
 suppressMessages(library(here))
 hard_drives <- read.table(here("data", "hard_drive.txt"))
@@ -42,12 +21,6 @@ hard_drives
 summary(hard_drives)
 sd(hard_drives$V1)
 
-```
-        
-Next, we are tasked with producing various plots, first, we make a histogram.
-
-# Exports: graphics file :file babelBatteryDist.pdf
-```{r, echo = FALSE}
 suppressMessages(library(patchwork))
 plt <- ggplot(data = hard_drives, aes(x=V1))
 plt <- plt + geom_histogram(binwidth = 0.5)
@@ -58,15 +31,7 @@ plt2 <- plt2 + geom_boxplot()
 plt2 <- plt2 + labs(title = "Boxplot of battery lives", x = "Years")
 
 (plt / plt2) + plot_layout(heights = c(4, 5))
-```
 
-Visually, the histogram of battery lives looks like a standard survival curve. We could very easily fit an exponential to it with good fit. Curve starts high and decreases at a decreasing rate. 
-In the boxplot, we can see a dense package around the median, and a lot of outliers going up.
-
-Next, he wants us to fit an exponential and gamma distribution to the data. We can call the method of moments estimator in R using the fitdistr function in the MASS library. 
-
-# Exports: output
-```{r, echo = FALSE}
 suppressMessages(require(MASS))
 
 exp_mod <- fitdistr(hard_drives$V1, "exponential")
@@ -85,14 +50,8 @@ gam_shape, gam_rate)
 sprintf("The log-likelihood for the exponential distribution is %f, and
 the log-likelihood for the gamma distribution is %f.",
 exp_lk, {gam_mod$loglik})
-## /n's print to terminal here because sprintf is just a wrapper for the c function
 
-```
 
-We can visualise the fit:
-
-# Exports: graphics file :file babelHardDriveLifeFit.pdf
-```{r, echo = FALSE}
 hist(x=hard_drives$V1, freq = FALSE, breaks = 10,
      main = "Histogram of hard drive lifetimes with fitted distributions",
      xlab = "Hard Drive Lifetimes (years)")
@@ -103,21 +62,10 @@ curve(dexp(x, rate = exp_mod$estimate["rate"]),
 curve(dgamma(x, rate = gam_mod$estimate["rate"],
              shape = gam_mod$estimate["shape"]),
       add = TRUE, col = "blue", lwd= 2)
-```
 
-They both have basically the same fit, the gamma distribution seems to have stuck a little bit closer to the big chunk of early battery deaths and the exponential seems to be a bit fatter outwards due to the outliers, but they both have essentially the same distributions. 
-
-The first step for evaluating whether any distribution fits a continuous distribution is always a Kolmogorov-Smirnov test. 
-
-# Exports: output
-```{r, echo = FALSE}
 ks.test(hard_drives$V1, "pexp", exp_rate)
 ks.test(hard_drives$V1, "pgamma", shape = gam_shape, rate = gam_rate)
-```
-Neither of our ks tests are statistically significant, so neither can be preferred on that basis. We can also observe the log-likelihoods and AIC/BIC values.
 
-# Exports: value table :colnames yes
-```{r, echo = FALSE}
 ## calculating AIC BIC values for exp and gam
 
 n <- dim(hard_drives) 
@@ -135,12 +83,6 @@ fit_stats <- data.frame (
 
 fit_stats
 
-```
-
-We can simulate the distributions and compare them to the original for an idea of fit as well.
-
-# Exports: graphics file :file babelQ1Simulations.pdf
-```{r, echo = FALSE}
 set.seed(1234)
 exp_sim <- rexp(n = 200, rate = exp_rate)
 gam_sim <- rgamma(n = 200, shape = gam_shape, rate = gam_rate)
@@ -173,17 +115,6 @@ plt6 <- plt6 + labs(title = "Exponential simulated summary", x = "Years")
 (plt | plt2) / (plt3 | plt4) / (plt5 | plt6)
 
 
-```
-
-The exponential distribution has a lower AIC and BIC than the gamma distribution, so it is the option we should choose.
-
-
-## Question 2
-
-For arima, we can call the base stats package arima(p, d, q). We can plot the dataset.
-
-# Exports: graphics file :file babelStockClosePlt.pdf
-```{r, echo = FALSE}
 dclose <- tibble(read.csv(here("data", "EuroIndices_Close.csv")))
 
 ## lubridate supplies dmy parsing
@@ -199,11 +130,7 @@ plt <- plt + geom_line(aes(y = AEX_Close, colour = "AEX")) +
          x = "Time")
 plt
 
-```
-We have non-zero means on all of them, but the DAX close in particular looks to have minor drift. We should run some augmented Dickey-Fuller tests to evaluate the feasibility of fitting any model here.
 
-# Exports: graphics file :file babelACFPACFDAX.pdf
-```{r, echo = FALSE}
 par(mfrow = c(2,1))
 
 acf(dclose$DAX_Close, main = "ACFs for DAX Close")
@@ -211,11 +138,6 @@ pacf(dclose$DAX_Close, main = "Partial ACFs for DAX Close")
 
 par(mfrow = c(1,1))
 
-```
-As we can see, this is heuristically not going to be stationary, as it lacks the geometric ACF regression to 0.
-
-# Exports: output
-```{r, echo = FALSE}
 suppressMessages(library(aTSA))
 ## augmented dickey-fuller can test stationarity in the presence
 ## of serial-correlation
@@ -228,13 +150,7 @@ d1dclose
 
 adf.test(x = d1dclose$DAX_Close, nlag = 2)
 
-```
 
-Now they're stationary, and we can fix something on them in some way.
-We can use the auto.arima package to pick out the lowest AIC/BIC model in a given range (for default it's max arima(5, 2, 5)). 
-
-# Exports: output
-```{r, echo=FALSE}
 suppressMessages(library(forecast))
 
 print("First we consider an AR(p) model.")
@@ -253,29 +169,14 @@ AIC_ARIMA <- mod_arima_DAX$aic
 sprintf("The AR model has an AIC of %.2f, the MA model has an AIC
 of %.2f, and the ARIMA model has an AIC of %.2f", AIC_AR, AIC_MA,
 AIC_ARIMA)
-```
 
-Since the ARIMA model has the lowest AIC, it should be preferred to the others. In this case, the model chosen is a (0, 1, 1), equivalent to an MA(1) model after the first difference. We can now predict 10 more values for the stock price, equivalent to the next 10 days. Luckily, forecast includes a really simple utility for doing this.
-
-# Exports: graphics file :file babelProjDAX20.pdf
-```{r, echo = FALSE}
 proj <- forecast(mod_arima_DAX, h = 10)
 
 autoplot(proj, ylab = "DAX20 Closing Price")
-```
 
-Next, we want to fit a vector autoregressive model to all four indices. We can show that all variables are of integration order 1.
-
-# Exports: output
-```{r, echo = FALSE}
 adf_checks <- (lapply(d1dclose[,-1], function(x)
     adf.test(x, nlag = 2)$p.value))
-```
 
-We also have to test cointegration before using the VAR model.
-
-# Exports: value table
-```{r, echo = FALSE}
 coint.test(d1dclose$DAX_Close, d1dclose$AEX_Close, nlag = 2)
 coint.test(d1dclose$DAX_Close, d1dclose$BEL20_Close, nlag = 2)
 coint.test(d1dclose$DAX_Close, d1dclose$CAC40_Close, nlag = 2)
@@ -291,46 +192,23 @@ cointegration <- data.frame(Indices = c("AEX", "BEL20", "CAC40", "DAX"),
 
 cointegration
 
-```
-
-The dataset satisfies equal difference stationarity assumptions, as well as co-integration requirements (in the once differentiated dataset). We have satisfied the assumptions so we can now use the VAR model.
-
-# Exports: output
-```{r, echo = FALSE}
 suppressMessages(library(vars))
 
 mod_var <- VARselect(d1dclose[,-1], lag.max = 5, type = c("const"))
 mod_var
-```
 
-We can now forecast future values for the change in index
-
-# Exports: graphics file :file babelEuroVAR.pdf
-```{r, echo = FALSE}
 temp_mod <- VAR(d1dclose[,-1], p = 2)
 var_proj <- predict(temp_mod, h = 10)
 par(mar = c(4, 4, 2, 1))
 plot(var_proj)
 par(mfrow = c(1,1))
-```
 
-Basic review stats
-# Exports: output
-```{r, echo = FALSE}
 Q2_arima_mod <- arima(dclose$DAX_Close, c(0,1,1))
 Box.test(Q2_arima_mod$residuals, lag = 2, type = c("Ljung-Box"))
 shapiro.test(Q2_arima_mod$residuals)
-```
 
-# Exports: graphics file :file babelTSArimaStats.pdf
-```{r, echo = FALSE}
 ts.diag(arima(dclose$DAX_Close, c(0,1,1)))
 
-```
-
-VAR post-regression review
-
-```{r, echo = FALSE}
 VAR_temp_mod <- VAR(d1dclose[,-1], p = 2)
 
 ## serial correlation
@@ -338,15 +216,7 @@ serial.test(VAR_temp_mod)
 
 ## normality tests
 normality.test(VAR_temp_mod)
-```
 
-## Question 3
-
-Firstly, we need to read in the dataset. We can then start fitting time series models into the distribution. 
-
-
-# Exports: graphics file :file babelDeathPlot.pdf
-```{r, echo = FALSE}
 deaths <- tibble(read.csv(here("data", "deaths.csv")))
 
 deaths$date <- strptime(deaths$date, "%Y-%m-%d")
@@ -359,12 +229,7 @@ acf(deaths$wk.deaths, main = "ACFs for deaths")
 pacf(deaths$wk.deaths, main = "PACFs for deaths")
 
 par(mfrow = c(1,1))
-```
 
-This doesn't look linear, the plot itself looks to have extreme shocks, ACFs decay linearly, and partial ACFs stay up after one lag.
-
-# Exports: output
-```{r, echo = FALSE}
 adf.test(deaths$wk.deaths, nlag = 3)
 
 acf(deaths$wk.deaths)
@@ -373,12 +238,8 @@ d.deaths <- deaths[-1,]
 d.deaths$wk.deaths <- diff(deaths$wk.deaths)
 
 adf.test(d.deaths$wk.deaths, nlag = 3)
-```
 
-As we can see, the first differential of deaths tests stationary.
 
-# Exports: graphics file :file babelDDeathsPlt.pdf
-```{r, echo = FALSE}
 par(mfrow = c(3,1))
 
 ts.plot(d.deaths$wk.deaths, main = "Change in deaths over time",
@@ -387,23 +248,14 @@ acf(d.deaths$wk.deaths, main = " ")
 pacf(d.deaths$wk.deaths, main = " ")
 
 par(mfrow = c(1,1))
-```
 
-This is much closer to what we'd expect, and we can now fit an ARIMA model to the dataset.
-
-# Exports: graphics file :file babelDeathsProjections.pdf
-```{r, echo = FALSE}
 death_mod <- auto.arima(deaths$wk.deaths, d = 1)
 death_mod # fixed d = 1 or default auto.arima picks a worse model
 
 proj_deaths <- forecast::forecast(death_mod, h = 2)
 autoplot(proj_deaths, main = "Death projections for next two weeks",
          ylab = "Deaths")
-```
-Square rooting is a monotonic transformation, so we can just fit a d=1 ARIMA model again.
 
-# Exports: graphics file :file babelSQDeathsProjections.pdf
-```{r, echo = FALSE}
 sqdeaths <- deaths
 sqdeaths$wk.deaths <- sqrt(deaths$wk.deaths)
 
@@ -423,43 +275,21 @@ autoplot(sqd_proj,
          main = "Back-fitted projections from rooted deaths",
          ylab = "Deaths")
 
-```
-
-We can see the base model predicts higher deaths, whereas the back-fitted one predicts slightly fewer. Observing the two by eye, the base model seems to align closer with the earlier trend.
-
-# Exports: graphics file :file babelTSDiagDeath.pdf
-```{r, echo = FALSE}
 temp_death_mod <- arima(deaths$wk.deaths, c(3, 1, 0))
 
 ts.diag(temp_death_mod)
-```
 
-# Exports: graphics file :file babelTSDiagSQDeath.pdf
-```{r, echo = FALSE}
 temp_mod_sqd <- arima(sqdeaths$wk.deaths, c(2,1,2))
 
 ts.diag(temp_mod_sqd)
 
-```
-residual tests
-# Exports: output
-```{r, echo = FALSE}
 Box.test(death_mod$residuals, lag = 2, type = c("Ljung-Box"))
 Box.test(mod_sqd$residuals, lag = 2, type = c("Ljung-Box"))
-```
-# Exports: output
-```{r, echo = FALSE}
+
+
 shapiro.test(death_mod$residuals)
 shapiro.test(mod_sqd$residuals)
-```
 
-
-## Question 4
-
-Firstly, we should download the data and calculate the returns.
-
-# Exports: graphics file :file babelEXRetTSPLT.pdf
-```{r, echo = FALSE}
 ex_rat <- tibble(read.csv(here("data", "USD-GBP.csv")))
 
 ex_rat$Date <- strptime(ex_rat$Date, "%d/%m/%Y")
@@ -468,19 +298,9 @@ ex_returns <- ex_rat[-1,]
 ex_returns$USD.GBP.Close <- diff(log(ex_rat$USD.GBP.Close))
 
 ts.plot(ex_returns$USD.GBP.Close)
-```
 
-Looks like a white noise process with a visible volatility shift about 3/4s of the way through the time period.
-
-# Exports: output
-```{r, echo = FALSE}
 adf.test(ex_returns$USD.GBP.Close, nlag = 2)
-```
 
-The augmented Dickey-Fuller test (no drift no trend) confirms at the 99% CI that the data has non-unit mean / variance. Now, we can split our dataset into time periods and finally use datetime.
-
-# Exports: output
-```{r, echo = FALSE}
 ## We can use dplyr to filter by criteria
 ## I think tidyverse masks filter but we call it explicitly
 pre_crash <- ex_returns %>%
@@ -496,11 +316,7 @@ sprintf("The pre-crash data ranges from %s to %s, and the
 post-crash data ranges from %s to %s.",
 as.character(pre_dur[1,]), as.character(pre_dur[2]),
 as.character(post_dur[1,]), as.character(post_dur[2]))
-```
 
-Firstly, we can try predicting both periods by using ARIMA models.
-
-```{r, echo = FALSE}
 auto.arima(pre_crash$USD.GBP.Close)
 auto.arima(post_crash$USD.GBP.Close)
 
@@ -512,32 +328,16 @@ shapiro.test(arima_mod_post$residuals)
 
 Box.test(arima_mod_pre$residuals, lag = 2, type = c("Ljung-Box"))
 Box.test(arima_mod_post$residuals, lag = 2, type = c("Ljung-Box"))
-```
 
-We can see that the post crisis model violates ARIMA assumptions, since it has serial-correlation.
-
-# Exports: graphics file :file babelTSDAGExPreEPlts.plt
-```{r, echo = FALSE}
 ts.diag(arima_mod_pre) # all residuals look fine
-```
 
-# Exports: graphics file :file babelTSDAGExPostEPlts.plt
-```{r, echo = FALSE}
 ts.diag(arima_mod_post)
-```
-Post-crisis residuals show evidence of being non-random, could be a stochastic variance problem. We can test for this using an ARCH test.
 
-```{r, echo = FALSE}
 suppressMessages(library(FinTS))
 
 ArchTest(pre_crash$USD.GBP.Close)
 ArchTest(post_crash$USD.GBP.Close)
-```
 
-We could attempt to resolve this model volatility using GARCH.
-
-# Exports: output
-```{r, echo = FALSE}
 suppressMessages(library(fGarch))
 
 ## iterating over models for pre-crisis
@@ -566,13 +366,4 @@ grm_post <- garchFit(formula = USD.GBP.Close ~ arma(2,1)+ garch(1,1),
 
 summary(grm_pre)
 summary(grm_post)
-```
 
-Pre has fine alpha and beta, doesn't pass JB or SW tests, passes LB test. Post has fine alpha and beta, passes residual normality tests, and passes LB tests. ARCH tests both fine, no evidence GARCH failed to eliminate stochastic volatility.
-
-
-
-
-## Local Variables:
-## jinx-local-words: "VARselect const dclose lwd"
-## End:

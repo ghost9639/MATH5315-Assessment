@@ -24,6 +24,8 @@ babel*.pdf
 *.png
 *.jpg
 *.jpeg
+*.tex*
+*.tex
 
 # flymake-mode
 *_flymake.*
