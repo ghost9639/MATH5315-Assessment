@@ -27,7 +27,7 @@ ARIMA and log ARIMA models were fitted and compared with an extreme focus on mod
 #+caption: Autocorrelation Tests
 [[file:images/babelDeathPlot.png]]
 
-[[file:images/Screenshot 2026-07-10 at 22.36.55.png][image]]
+[[file:images/Screenshot.png][image]]
 
 * GARCH Modelling (Stock Returns)
 
