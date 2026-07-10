@@ -18,12 +18,7 @@ id_ed25519
 .org-id-locations
 *_archive
 
-babel*.pdf
 # edraw
-*.svg
-*.png
-*.jpg
-*.jpeg
 *.tex*
 *.tex
 
