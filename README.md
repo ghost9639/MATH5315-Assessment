@@ -1,22 +1,22 @@
 
 # Table of Contents
 
-1.  [Project Specifications](#org02c6d95)
-2.  [Pearson Family Fitting (Battery Lifespans)](#orgb262cdc)
-3.  [ARIMA and VAR (Stock Close Prices)](#org970d8c0)
-4.  [ARIMA (COVID Mortality)](#org59d88a4)
-5.  [GARCH Modelling (Stock Returns)](#org3f632e5)
+1.  [Project Specifications](#orgd854048)
+2.  [Pearson Family Fitting (Battery Lifespans)](#org7fa7479)
+3.  [ARIMA and VAR (Stock Close Prices)](#org549ec49)
+4.  [ARIMA (COVID Mortality)](#org1b33e3d)
+5.  [GARCH Modelling (Stock Returns)](#org5a8d910)
 
 
 
-<a id="org02c6d95"></a>
+<a id="orgd854048"></a>
 
 # Project Specifications
 
 This is a project exploring a wide variety of datasets, from financial to industry production, and evaluating them using standard time series methods. All datasets have been included in data/, and the code is linked and explained in [a markdown file](src/Main.rmd). A full [report](Project.pdf) has been compiled as well.
 
 
-<a id="orgb262cdc"></a>
+<a id="org7fa7479"></a>
 
 # Pearson Family Fitting (Battery Lifespans)
 
@@ -25,7 +25,7 @@ The first section predicts the likelihood of a battery failing within a certain 
 ![img](images/babelHardDriveLifeFit.png "Hard Drive Lifetimes with Fitted Gamma and Exponential distributions")
 
 
-<a id="org970d8c0"></a>
+<a id="org549ec49"></a>
 
 # ARIMA and VAR (Stock Close Prices)
 
@@ -34,7 +34,7 @@ ARIMA is applied to stock close price datasets in order to estimate near future 
 ![img](images/babelEuroVAR.png "VAR Stock Price Projections")
 
 
-<a id="org59d88a4"></a>
+<a id="org1b33e3d"></a>
 
 # ARIMA (COVID Mortality)
 
@@ -42,10 +42,10 @@ ARIMA and log ARIMA models were fitted and compared with an extreme focus on mod
 
 ![img](images/babelDeathPlot.png "Autocorrelation Tests")
 
-[image](images/babelDeathPlot.png)
+[image](images/Screenshot 2026-07-10 at 22.36.55.png)
 
 
-<a id="org3f632e5"></a>
+<a id="org5a8d910"></a>
 
 # GARCH Modelling (Stock Returns)
 

@@ -27,6 +27,8 @@ ARIMA and log ARIMA models were fitted and compared with an extreme focus on mod
 #+caption: Autocorrelation Tests
 [[file:images/babelDeathPlot.png]]
 
+[[file:images/Screenshot 2026-07-10 at 22.36.55.png][image]]
+
 * GARCH Modelling (Stock Returns)
 
 Conversion of stock prices to stock returns was followed for ARCH testing. After non-random volatility was detected and an aDF test confirmed non-unit variance, a GARCH model was fitted. Post regression testing examined a suite of tests to ensure parameter selection was appropriate, and model alpha and beta carefully evaluated and explained in simple terms.
